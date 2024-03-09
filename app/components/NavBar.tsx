@@ -25,6 +25,11 @@ const Navbar = () => {
               </Link>
             </div>
           </div>
+          <div className="hidden md:flex items-center space-x-1">
+            <Link href="/todos" className="py-5 px-3 hover:text-gray-900">
+            To Do List        
+            </Link>
+          </div>
           <div className="flex items-center space-x-1">
             {currentUser ? (
               <>
