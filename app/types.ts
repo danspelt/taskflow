@@ -2,6 +2,7 @@ import { Timestamp } from "firebase/firestore";
 interface Task {
   id: string;
   title: string;
+  text: string;
   priority: string;
   deadline: Timestamp | string; // Use Timestamp for Firestore compatibility or string for simplicity
 }
