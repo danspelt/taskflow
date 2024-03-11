@@ -23,16 +23,7 @@ const Menu = () => {
           />
           Profile          
         </Link>
-        </li>
-        <li className="border-b-2 border-gray">
-          <Link href="/order-history">Order History</Link>
-        </li>
-        {
-          currentUser && (
-            <li className="border-b-2 border-gray">
-              <Link href="/admin/dashboard">Admin Dashboard</Link>
-            </li>
-        )}        
+        </li>        
         <li>
            <button onClick={signout}>Sign out</button>
         </li>

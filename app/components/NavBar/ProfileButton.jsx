@@ -16,7 +16,9 @@ export default function ProfileButton() {
   console.log('isGoogleUser:', isGoogleUser);
 
   return (
-    <button className="btn btn-ghost" onClick={() }>
+    <button className="btn btn-ghost" onClick={() => {
+      setIsProfileMenuOpen((prev) => !prev);
+    }}>
       {isGoogleUser ? (
         <>
         
