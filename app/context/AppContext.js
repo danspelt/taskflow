@@ -9,6 +9,7 @@ export const useAppContext = () => {
 }
 
 export const AppProvider = ({ children }) => {
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [tasks, setTasks] = useState([]);
 
   const addTask = (task) => {
@@ -23,6 +24,8 @@ export const AppProvider = ({ children }) => {
     tasks,
     addTask,
     removeTask,
+    isProfileMenuOpen,
+    setIsProfileMenuOpen,
   }; 
   return (
     <AppContext.Provider value={value}>

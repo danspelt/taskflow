@@ -1,33 +1,13 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useEffect } from 'react';
-//import useCartService from '../../lib/hooks/useCartStore';
-//import useLayoutService from '../../lib/hooks/useLayout';
-import { signOut } from 'firebase/auth';
-import { FIREBASE_AUTH } from '../../firebaseConfig';
-
-const Menu = ({ user, isOpen }) => {
- // const { items, init } = useCartService();
-
-  useEffect(() => {
-    // This effect ensures any necessary initialization when the component mounts
-    // For example, you might want to fetch some data here or set some state
-  }, []);
-
-  const signoutHandler = () => {
-    init();
-    signOut(FIREBASE_AUTH).then(() => {
-      // Handle successful sign out
-    }).catch((error) => {
-      // Handle sign out errors
-    });
-  };
-
-  const { theme, toggleTheme } = useLayoutService();
-
+import { useAuth } from '@/context/AuthContext';
+import { useAppContext } from '@/context/AppContext';
+const Menu = () => {
+  const { isProfileMenuOpen } = useAppContext(); 
+  const { currentUser, signout } = useAuth();
   // Apply conditional classes based on isOpen prop
-  const menuClasses = isOpen ? "block" : "hidden";
+  const menuClasses = isProfileMenuOpen ? "block" : "hidden";
 
   return (
     <div className={`absolute top-0 left-0 mt-16 ${menuClasses} z-50`}>
@@ -35,8 +15,8 @@ const Menu = ({ user, isOpen }) => {
         <li className="border-b-2 border-gray">
           <Link href="/profile">
           <Image
-            src={user.photoURL}
-            alt={user.displayName}
+            src={currentUser.photoURL}
+            alt={currentUser.displayName}
             width={40}
             height={40}
             className="rounded-full"
@@ -48,13 +28,13 @@ const Menu = ({ user, isOpen }) => {
           <Link href="/order-history">Order History</Link>
         </li>
         {
-          user && (
+          currentUser && (
             <li className="border-b-2 border-gray">
               <Link href="/admin/dashboard">Admin Dashboard</Link>
             </li>
         )}        
         <li>
-           <button onClick={signoutHandler}>Sign out</button>
+           <button onClick={signout}>Sign out</button>
         </li>
       </div>
     </div>
