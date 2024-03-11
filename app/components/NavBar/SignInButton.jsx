@@ -1,13 +1,14 @@
 "use client";
-import { useAppContext } from "@/context/AppContext";
+import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 
 // Client component for sign-in button
 export default function SignInButton() {
-  const { currentUser, logout } = useAppContext();
+  const { currentUser, logout } = useAuth();
   return (
     <div>
-      {currentUser ? (
+      {
+      !currentUser ? (
         <Link href="/login" className="btn btn-primary">
           LogIn
         </Link>

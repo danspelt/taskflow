@@ -1,5 +1,11 @@
 "use client";
-import { createContext, useContext, useState, useEffect, useMemo } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useMemo,
+} from "react";
 import {
   signInWithPopup,
   signOut,
@@ -8,7 +14,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore"; // Import Firestore document functions
+import { doc, addDoc, getDoc, setDoc } from "firebase/firestore"; // Import Firestore document functions
 import { FIREBASE_AUTH, FIRESTORE } from "@/firebaseConfig"; // Import Firebase auth and Firestore instances
 
 export const AuthContext = createContext();
@@ -19,22 +25,32 @@ export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
-      setCurrentUser(user);
-      setDoc(doc(FIRESTORE, "users", user.uid), {
-        email: user.email,
-        createdAt: new Date(),
+    const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, async (user) => {
+      if (user) {
+        // Check if user already exists in Firestore
+        const userRef = doc(FIRESTORE, "users", user.uid);
+        const docSnap = await getDoc(userRef);
   
-      });
-      // Set loading to false after user state is set to prevent flickering of login page
+        if (!docSnap.exists()) {
+          // Add user to Firestore if not exists
+          await setDoc(userRef, {
+            email: user.email,
+            provider: user.providerData[0]?.providerId,
+            isAdmin: false,
+            createdAt: new Date(),
+          });
+        }
+  
+        setCurrentUser(user);
+      } else {
+        setCurrentUser(null);
+      }
       setLoading(false);
     });
-
+  
     return unsubscribe;
   }, []);
-
   const handleError = (fn) => async (...args) => {
     try {
       setError(""); // Reset error before attempting
@@ -47,13 +63,19 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signup = handleError(async (email, password) => {
-    const userCredential = await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
+    const userCredential = await createUserWithEmailAndPassword(
+      FIREBASE_AUTH,
+      email,
+      password
+    );
     const user = userCredential.user;
-    // After successful signup, add user details to Firestore
-    await setDoc(doc(FIRESTORE, "users", user.uid), {
+    // After successful sign-up, add user to Firestore
+    const userRef = doc(FIRESTORE, "users", user.uid);
+    await addDoc(userRef, {
       email: user.email,
+      provider: user.providerData[0].providerId,
+      taskListId: 0,
       createdAt: new Date(),
-      // Add any other user details here
     });
     return user;
   });
@@ -72,18 +94,21 @@ export const AuthProvider = ({ children }) => {
     return signInWithPopup(FIREBASE_AUTH, provider);
   });
 
-  const value = useMemo(() => ({
-    currentUser,
-    signup,
-    login,
-    logout,
-    loginWithGoogle,
-    error,
-  }), [currentUser, error]);
+  const value = useMemo(
+    () => ({
+      currentUser,
+      signup,
+      login,
+      logout,
+      loginWithGoogle,
+      error,
+    }),
+    [currentUser, error]
+  );
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {loading ? <p>Loading...</p> : children}
     </AuthContext.Provider>
   );
 };
