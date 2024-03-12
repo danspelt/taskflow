@@ -13,7 +13,13 @@ useEffect(() => {
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
         const tasksData: Task[] = [];
         querySnapshot.forEach((doc) => {
-            const task: Task = { id: doc.id, ...doc.data() };
+            const task: Task = { 
+                id: doc.id,
+                title: doc.data().title,
+                text: doc.data().text,
+                priority: doc.data().priority,
+                deadline: doc.data().deadline,
+            };
             tasksData.push(task);
         });
         setTasks(tasksData);

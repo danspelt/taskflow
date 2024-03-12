@@ -10,7 +10,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
   task: { title, priority, deadline },
 }) => {
   // Check if deadline is already a Date object or if it's a string that needs parsing
-  const deadlineDate = deadline
+  const deadlineDate = deadline 
     ? deadline instanceof Date
       ? deadline
     : new Date(deadline as string)
