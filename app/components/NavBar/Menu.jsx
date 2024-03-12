@@ -5,7 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useAppContext } from '@/context/AppContext';
 const Menu = () => {
   const { isProfileMenuOpen } = useAppContext(); 
-  const { currentUser, signout } = useAuth();
+  const { currentUser, logout } = useAuth();
   // Apply conditional classes based on isOpen prop
   const menuClasses = isProfileMenuOpen ? "block" : "hidden";
 
@@ -25,7 +25,7 @@ const Menu = () => {
         </Link>
         </li>        
         <li>
-           <button onClick={signout}>Sign out</button>
+           <button onClick={() => logout()} className="btn btn-ghost">Logout</button> 
         </li>
       </div>
     </div>

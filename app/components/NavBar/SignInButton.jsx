@@ -4,20 +4,12 @@ import Link from "next/link";
 
 // Client component for sign-in button
 export default function SignInButton() {
-  const { currentUser, logout } = useAuth();
+  const { currentUser } = useAuth();
+  if (currentUser) return null; // Hide button if user is logged in
   return (
-    <div>
-      {
-      !currentUser ? (
-        <Link href="/login" className="btn btn-primary">
-          LogIn
-        </Link>
-      ) : (
-        <Link href="/" onClick={logout} className="btn btn-primary">
-          LogOut
-        </Link>
-      )}
-    </div>
+    <Link href="/login" className="btn btn-primary">
+      LogIn
+    </Link>
   );
 }
 

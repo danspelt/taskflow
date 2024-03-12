@@ -20,8 +20,7 @@ export default function ProfileButton() {
       setIsProfileMenuOpen((prev) => !prev);
     }}>
       {isGoogleUser ? (
-        <>
-        
+        <div className="">
         <Image
           src={currentUser.photoURL}
           alt="Profile"
@@ -30,7 +29,7 @@ export default function ProfileButton() {
           className="rounded-full"
         />
         <Menu/>
-        </>
+        </div>
       ) : (
         <FaUserCircle className="text-3xl" />
       )}
