@@ -10,7 +10,7 @@ const Menu = () => {
   const menuClasses = isProfileMenuOpen ? "block" : "hidden";
 
   return (
-    <div className={`absolute top-0 left-0 mt-16 ${menuClasses} z-50`}>
+    <div className={`absolute right-0 ${menuClasses}`}>
       <div className="menu p-4 overflow-y-auto w-80 bg-base-100 text-base-content shadow-lg">      
         <li className="border-b-2 border-gray">
           <Link href="/profile">
